@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160530052314) do
+ActiveRecord::Schema.define(version: 20160531025330) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,11 +49,22 @@ ActiveRecord::Schema.define(version: 20160530052314) do
   add_index "moderators", ["email"], name: "index_moderators_on_email", unique: true, using: :btree
   add_index "moderators", ["reset_password_token"], name: "index_moderators_on_reset_password_token", unique: true, using: :btree
 
-  create_table "qas", force: :cascade do |t|
-    t.text     "question"
-    t.text     "answer"
+  create_table "qa_sections", force: :cascade do |t|
+    t.string   "label"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
+  create_table "qas", force: :cascade do |t|
+    t.text     "question"
+    t.text     "answer"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.integer  "qa_section_id"
+    t.boolean  "show_on_website"
+  end
+
+  add_index "qas", ["qa_section_id"], name: "index_qas_on_qa_section_id", using: :btree
+
+  add_foreign_key "qas", "qa_sections"
 end
